@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,6 +74,12 @@ body {
 /* Ensure form controls, links and SVG text inherit the global Inter font */
 input, button, textarea, select, a { font-family: inherit; }
 svg { font-family: inherit; }
+
+/* Navigation toggle (hidden on desktop) */
+.nav-toggle {
+  display: none; border: none; background: transparent; cursor: pointer;
+  padding: 8px; border-radius: 8px; color: var(--text-1);
+}
 
 /* ════════════════════════════════
    NAV
@@ -739,21 +744,17 @@ nav {
 }
 
 .cta-form {
-  display: flex; justify-content: center;
-  max-width: 420px; margin: 0 auto;
-  background: var(--surface-0);
-  border: 1px solid var(--border-md);
-  border-radius: var(--r-pill);
-  padding: 6px 6px 6px 20px;
-  box-shadow: var(--sh-md);
-  align-items: center; gap: 8px;
+  display: flex; justify-content: center; gap: 12px;
+  max-width: 640px; margin: 0 auto;
+  padding: 0; background: transparent; border: none; box-shadow: none;
+  align-items: center;
 }
 
 .cta-input {
-  flex: 1; background: none; border: none; outline: none;
-  font-family: var(--font-round);
-  font-size: 15px; font-weight: 400;
-  color: var(--text-1);
+  flex: 1; min-width: 160px; box-sizing: border-box;
+  padding: 10px 14px; border-radius: 999px; border: 1px solid var(--border-md);
+  background: var(--surface-0); outline: none;
+  font-family: var(--font); font-size: 15px; font-weight: 400; color: var(--text-1);
 }
 .cta-input::placeholder { color: var(--text-3); }
 
@@ -806,16 +807,84 @@ footer {
    RESPONSIVE
 ════════════════════════════════ */
 @media (max-width: 768px) {
-  .nav-links { display: none; }
-  .hero { padding: 120px 20px 64px; }
-  .stats-bar { flex-direction: column; }
-  .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
-  .stat-item:last-child { border-bottom: none; }
+  /* Navigation */
+  .nav-toggle { display: inline-flex; align-items: center; }
+  .nav-inner { padding: 10px 12px; max-width: calc(100% - 24px); }
+
+  /* Mobile dropdown menu */
+  .nav-links {
+    display: none; position: absolute; top: calc(100% + 10px); right: 12px;
+    background: var(--surface-0); border: 1px solid var(--border); border-radius: 12px;
+    box-shadow: var(--sh-md); padding: 8px; flex-direction: column; gap: 6px; z-index: 120;
+    min-width: 160px;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links .nav-link { padding: 10px 12px; border-radius: 8px; color: var(--text-1); }
+  .nav-links .nav-link:hover { background: var(--surface-1); }
+
+  /* Keep header compact: reduce logo size */
+  .nav-logo { font-size: 13px; }
+
+  /* Hide large CTA in header on mobile (use CTA section) */
+  .nav-cta { display: none; }
+
+  /* Hero */
+  .hero { padding: 100px 16px 48px; }
+  .hero-headline { font-size: clamp(28px, 9vw, 44px); max-width: 92%; }
+  .hero-sub { max-width: 92%; margin-left: auto; margin-right: auto; }
+
+  /* Stats: stack vertically with subtle separators */
+  .stats-bar { flex-direction: column; gap: 12px; align-items: center; margin-top: 12px; }
+  .stat-item { width: 100%; max-width: 420px; padding: 10px 0; text-align: center; }
+  .stat-item + .stat-item { border-left: none; margin-left: 0; padding-left: 0; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 12px; }
+
+  /* Layout grids stack */
   .why-grid, .ws-layout { grid-template-columns: 1fr; gap: 40px; }
   .steps-grid { grid-template-columns: 1fr; }
+
+  /* Mockup: collapse to single column, hide sidebar, stack panels */
   .mock-sidebar { display: none; }
-  .mock-body { grid-template-columns: 1fr 140px; }
-  footer { flex-direction: column; gap: 8px; text-align: center; }
+  .mock-body { grid-template-columns: 1fr; grid-auto-rows: auto; gap: 12px; }
+  .mock-preview { order: 1; }
+  .mock-panel { order: 2; }
+  .mock-reel { width: 92%; margin: 0 auto; }
+
+  /* Hide mock filename on small screens to reduce clutter */
+  .mock-file { display: none; }
+
+  /* Temporarily hide the whole mockup on small screens to improve fit */
+  .mockup { display: none; }
+
+  /* CTA: stack form vertically on small screens and separate input/button */
+  .cta-section { padding: 72px 16px; }
+  .cta-heading { font-size: clamp(26px, 8vw, 40px); }
+
+  /* Make the form a simple block; input and button are separate controls */
+  .cta-form { display: block; max-width: 420px; margin: 0 auto; padding: 0; }
+  .cta-form .cta-input {
+    display: block; width: 100%; box-sizing: border-box;
+    padding: 12px 16px; border-radius: 999px;
+    border: 1px solid var(--border-md); background: var(--surface-0);
+    font-size: 15px; color: var(--text-1);
+  }
+  .cta-form .cta-btn {
+    display: block; width: 100%; margin-top: 12px;
+    padding: 12px 16px; border-radius: 999px;
+    background: var(--grey-900); color: var(--white); border: none; cursor: pointer;
+    font-size: 15px; font-weight: 600;
+  }
+  .cta-form .cta-btn:hover { background: var(--black); transform: none; }
+
+  /* Ensure the hint text has comfortable spacing */
+  .cta-note { margin-top: 12px; }
+
+  /* Sections spacing */
+  .section { padding: 60px 16px; }
+
+  /* Footer */
+  footer { flex-direction: column; gap: 6px; text-align: center; padding: 14px 12px; }
+  .footer-logo { font-size: 13px; }
+  .footer-copy { font-size: 12px; color: var(--text-2); }
 }
 </style>
 </head>
@@ -825,7 +894,11 @@ footer {
 <nav>
   <div class="nav-inner">
     <a href="#" class="nav-logo">Hinglish Captions</a>
-    <div class="nav-links">
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1h16M1 6h16M1 11h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+
+    <div class="nav-links" id="nav-links">
       <a href="#how" class="nav-link">How it works</a>
       <a href="#workspace" class="nav-link">Workspace</a>
     </div>
@@ -1091,8 +1164,25 @@ footer {
     el.closest('.mock-chips').querySelectorAll('.mock-chip').forEach(c => c.classList.remove('on'));
     el.classList.add('on');
   }
+  
+  // Mobile nav toggle
+  (function() {
+    const toggle = document.querySelector('.nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', function(e) {
+      const open = links.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!links.classList.contains('open')) return;
+      if (e.target === toggle || toggle.contains(e.target) || links.contains(e.target)) return;
+      links.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  })();
 </script>
 </body>
 </html>
-highlish-captions-homepage.html
-Displaying highlish-captions-homepage.html.
